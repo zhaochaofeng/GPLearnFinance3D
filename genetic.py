@@ -1677,7 +1677,7 @@ class SymbolicTransformer(BaseSymbolic, TransformerMixin):
                 OOB_IR = eval(OOB_IR_cal_code)
                 OOB_RankIC = eval(OOB_RankIC_cal_code)
 
-                result = result.append({"表达式": program.__str__(),
+                result = pd.concat([result, pd.DataFrame([{"表达式": program.__str__(),
                                         "fitness": program.raw_fitness_,
                                         "OOB fitness": program.oob_fitness_,
                                         "训练集IC": IC,
@@ -1686,8 +1686,7 @@ class SymbolicTransformer(BaseSymbolic, TransformerMixin):
                                         "样本外IR": OOB_IR,
                                         "训练集RankIC": RankIC,
                                         "样本外RankIC": OOB_RankIC
-                                        },
-                                       ignore_index=True)
+                                        }])], ignore_index=True)
                 result.drop_duplicates(subset="表达式", inplace=True)
         else:
 
@@ -1752,7 +1751,7 @@ class SymbolicTransformer(BaseSymbolic, TransformerMixin):
                 OOB_IR = eval(OOB_IR_cal_code)
                 OOB_RankIC = eval(OOB_RankIC_cal_code)
 
-                result = result.append({"表达式": program.__str__(),
+                result = pd.concat([result, pd.DataFrame([{"表达式": program.__str__(),
                                         "fitness": program.raw_fitness_,
                                         "OOB fitness": program.oob_fitness_,
                                         "训练集IC": IC,
@@ -1761,8 +1760,7 @@ class SymbolicTransformer(BaseSymbolic, TransformerMixin):
                                         "样本外IR": OOB_IR,
                                         "训练集RankIC": RankIC,
                                         "样本外RankIC": OOB_RankIC
-                                        },
-                                       ignore_index=True)
+                                        }])], ignore_index=True)
                 result.drop_duplicates(subset="表达式", inplace=True)
         if show_tracing[0]:
             tracing_result = pd.DataFrame(
@@ -1829,7 +1827,7 @@ class SymbolicTransformer(BaseSymbolic, TransformerMixin):
                 OOB_IR = eval(OOB_IR_cal_code)
                 OOB_RankIC = eval(OOB_RankIC_cal_code)
 
-                tracing_result = tracing_result.append({"表达式": program.__str__(),
+                tracing_result = pd.concat([tracing_result, pd.DataFrame([{"表达式": program.__str__(),
                                                         "fitness": program.raw_fitness_,
                                                         "OOB fitness": program.oob_fitness_,
                                                         "训练集IC": IC,
@@ -1839,8 +1837,7 @@ class SymbolicTransformer(BaseSymbolic, TransformerMixin):
                                                         "训练集RankIC": RankIC,
                                                         "样本外RankIC": OOB_RankIC,
                                                         "代数": trace_generation,
-                                                        },
-                                                       ignore_index=True)
+                                                        }])], ignore_index=True)
                 tracing_result.drop_duplicates(subset="表达式", inplace=True)
                 tracing_result.to_csv(show_tracing[1])
         return result
