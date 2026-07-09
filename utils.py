@@ -121,6 +121,36 @@ def check_floats(input_list,data):
 # print(_syntax_adapter("TRA (IC>0.02) TOT (IC>=0.02) OOB (IR<0.05)"))
 
 
+def make_XY(df, index_name, columns_name, Y_column,):
+    '''
+    将 二维数据转化为 三维形式
+    Args:
+        df: 输入的dataFrame shape:[trade_dates * stocks,features] [stock000001(trade_dates,features),stock000002(trade_dates,features)...]
+        index_name: 交易日期
+        columns_name: 股票名称
+        Y_column1: 预测的对象
+
+    Returns:
+        X：(datetime, features, instruments)
+        Y: (datetime, instruments)
+        feature_names: (features,)
+
+                           开盘价                       ...         最高价
+    股票代码          SH600000    SH600009 SH600010  ...    SZ301269    SZ301308    SZ302132
+    交易日期                                         ...
+    2026-01-05  206.919998  102.889999    20.08  ...  110.180000  286.820007  487.559998
+    2026-01-06  195.470001  102.739998    20.41  ...  112.040001  298.989990  495.989990
+    '''
+    df = df.pivot_table(index=[index_name], columns=[columns_name], sort=True, dropna=False)
+    Y1 = df.loc[:,(Y_column,)].to_numpy(dtype=np.double)
+
+    df = df.drop([Y_column,],axis=1)
+
+    X_0_len = len(df.index)  # 日期维度
+    X_1_len = len(df.columns.levels[0]) - 1    # 特征维度
+    X_2_len = len(df.columns.levels[1])        # 股票维度
+    return df.to_numpy(dtype=np.double).reshape((X_0_len, X_1_len, X_2_len)), Y1, df.columns.levels[0].drop([Y_column,])
+
 
 
 
