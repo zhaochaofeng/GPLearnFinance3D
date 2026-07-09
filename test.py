@@ -3,6 +3,7 @@ import genetic
 import qlib
 from qlib.data import D
 from utils import make_XY
+import os
 from add_ts_function import ts_std_10, ts_max_10,  ts_mean_10
 from add_ts_function import dynamic_ts_std, dynamic_ts_mean,dynamic_ts_max
 
@@ -64,10 +65,15 @@ gp_sample = genetic.SymbolicTransformer(generations=2,
                                         parsimony_coefficient="auto",
                                         feature_names=X_feature_names,
                                         max_samples=1, verbose=1,
-                                        random_state=0, n_jobs=6)
+                                        random_state=0, n_jobs=os.cpu_count()-2)
 
 gp_sample.fit_3D(X, Y, feature_names, sample_weight=sample_weight,
                  standard_expression="TRA ((pearson_3d>=0.02) and (spearman_3d >=0.002)) OOB (pearson_3d>0.0002)",
                  need_parallel=True)
 
-
+result = gp_sample.show_program(X,Y,
+                                sample_weight=sample_weight,
+                                feature_names=X_feature_names,
+                                baseIC=False,
+                                show_tracing=(True,"./show_tracing.csv"))
+result.to_csv("./result_only10.csv")
